@@ -1,6 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+
+// your global CSS
 import './global.css'
+
+// add Leaflet default CSS here ⬇️
+import "leaflet/dist/leaflet.css";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+
+
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
