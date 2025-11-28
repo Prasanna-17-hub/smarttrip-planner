@@ -1,7 +1,9 @@
 import { useLocation, Link } from "react-router-dom";
 import ItineraryDayMap from "../components/ItineraryDayMap";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import api from "../services/axiosInstance";
+import PrintableItinerary from "../components/PrintableItinerary";
+import { useReactToPrint } from "react-to-print";
 
 function ItineraryResult() {
   const location = useLocation();
@@ -23,32 +25,25 @@ function ItineraryResult() {
     );
   }
 
-  // Extract all values safely
-  const { 
-    totalCost, 
-    dayWisePlan, 
-    totalDays, 
-    city, 
-    budget 
-  } = state;
+  const { totalCost, dayWisePlan, totalDays, city, budget } = state;
 
-  // ⭐ Save trip to database
+  // -------------------------------
+  // SAVE TRIP TO DATABASE
+  // -------------------------------
   const saveTripToDB = async () => {
     try {
       const token = localStorage.getItem("token");
-
-      // Ensure JSON is correct (deep object)
       const cleanPlan = JSON.parse(JSON.stringify(dayWisePlan));
 
       const payload = {
-        city: city,              // MUST be string
-        days: totalDays,         // MUST be number
-        budget: budget,          // MUST be number
-        totalCost: totalCost,    // MUST be number
-        dayWisePlan: cleanPlan,  // MUST be valid JSON
+        city,
+        days: totalDays,
+        budget,
+        totalCost,
+        dayWisePlan: cleanPlan,
       };
 
-      console.log("👉 Sending trip payload:", payload);
+      console.log("👉 Trip Payload:", payload);
 
       await api.post("/trips/save", payload, {
         headers: { Authorization: `Bearer ${token}` },
@@ -61,28 +56,67 @@ function ItineraryResult() {
     }
   };
 
+  // -------------------------------
+  // PDF DOWNLOAD SETUP (FINAL FIX)
+  // -------------------------------
+  const printRef = useRef();
+
+  const handleDownloadPdf = useReactToPrint({
+    content: () => printRef.current,
+    contentRef: printRef,      // ⭐ REQUIRED for react-to-print v3+
+    documentTitle: "SmartTrip-Itinerary",
+  });
+
   return (
     <div className="p-8 max-w-4xl mx-auto">
+
+      {/* -------------------------------
+          📌 Hidden Printable PDF Content
+      ------------------------------- */}
+      <div style={{ display: "none" }}>
+        <PrintableItinerary
+          ref={printRef}
+          itinerary={{
+            totalCost,
+            dayWisePlan,
+            city,
+            days: totalDays,
+            budget,
+          }}
+        />
+      </div>
+
       <h1 className="text-3xl font-bold mb-4">Your Travel Itinerary</h1>
 
-      {/* Save button */}
-      <button
-        onClick={saveTripToDB}
-        className="bg-blue-600 text-white px-4 py-2 rounded mb-4"
-      >
-        Save Trip
-      </button>
+      {/* Action Buttons */}
+      <div className="mb-4">
+        <button
+          onClick={saveTripToDB}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Save Trip
+        </button>
+
+        <button
+          onClick={handleDownloadPdf}
+          className="bg-purple-600 text-white px-4 py-2 rounded ml-3"
+        >
+          Download PDF
+        </button>
+      </div>
 
       <p className="text-xl mb-6">
         Estimated Total Cost:{" "}
         <span className="font-bold text-green-700">${totalCost}</span>
       </p>
 
+      {/* Day-wise itinerary display */}
       {dayWisePlan.map((dayObj) => (
         <div
           key={dayObj.day}
           className="border rounded shadow p-4 mb-6 bg-white"
         >
+          {/* Day Header */}
           <div
             className="flex justify-between items-center cursor-pointer"
             onClick={() =>
@@ -95,10 +129,13 @@ function ItineraryResult() {
             </span>
           </div>
 
+          {/* Expanded Content */}
           {expanded === dayObj.day && (
             <>
+              {/* Map */}
               <ItineraryDayMap places={dayObj.places} />
 
+              {/* List of attractions */}
               <div className="mt-3">
                 {dayObj.places.map((p, i) => (
                   <div
@@ -127,6 +164,7 @@ function ItineraryResult() {
         </div>
       ))}
 
+      {/* Plan Another Trip */}
       <Link to="/itinerary-form">
         <button className="bg-green-600 text-white p-3 rounded mt-6">
           Plan Another Trip

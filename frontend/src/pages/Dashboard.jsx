@@ -3,7 +3,8 @@ import api from "../services/axiosInstance";
 
 function Dashboard() {
   const [trips, setTrips] = useState([]);
-
+  const [loading, setLoading] = useState(false);
+  if (loading) return <Spinner />;
   const loadTrips = async () => {
     try {
       const token = localStorage.getItem("token");

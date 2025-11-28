@@ -9,6 +9,7 @@ function CitySearch() {
   const [userLocation, setUserLocation] = useState(null);
   const [mapMethods, setMapMethods] = useState(null);
   const [locationEnabled, setLocationEnabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   /******************************
    * LIVE USER GPS WHEN ENABLED
@@ -18,6 +19,7 @@ function CitySearch() {
       setUserLocation(null);
       return;
     }
+    if (loading) return <Spinner />;
 
     if ("geolocation" in navigator) {
       const watcher = navigator.geolocation.watchPosition(
@@ -62,7 +64,8 @@ function CitySearch() {
           placeholder="Enter city name..."
           onChange={(e) => setCity(e.target.value)}
         />
-        <button className="bg-blue-600 text-white p-2" onClick={searchCity}>
+        <button className="bg-blue-600 hover:bg-blue-700 transition text-white px-4 py-2 rounded shadow"
+ onClick={searchCity}>
           Search
         </button>
       </div>
