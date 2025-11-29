@@ -16,7 +16,6 @@ function ItineraryForm() {
 
     setLoading(true);
     try {
-      // Step 1 — Get attractions
       const attractionsRes = await api.get(`/attractions/${city}`);
       const attractions = attractionsRes.data.attractions;
 
@@ -25,7 +24,6 @@ function ItineraryForm() {
         return;
       }
 
-      // Step 2 — Generate itinerary
       const itineraryRes = await generateItinerary({
         city,
         days,
@@ -33,7 +31,6 @@ function ItineraryForm() {
         attractions,
       });
 
-      // Step 3 — Pass data to next page
       navigate("/itinerary-result", {
         state: itineraryRes.data,
       });
@@ -45,40 +42,47 @@ function ItineraryForm() {
   };
 
   return (
-    <div className="p-8 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Create Your Itinerary</h1>
+    <div className="p-8 max-w-xl mx-auto bg-[var(--dark-bg)] min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-[var(--gold)]">
+        Create Your Itinerary
+      </h1>
 
-      <label>City</label>
+      <label className="text-[var(--text-light)]">City</label>
       <input
         type="text"
-        className="border p-2 w-full mb-4"
+        className="bg-[var(--dark-card)] text-[var(--text-light)] border border-[var(--dark-soft)]
+                   p-2 w-full mb-4 rounded focus:border-[var(--gold)] focus:outline-none"
         placeholder="Enter city"
         value={city}
         onChange={(e) => setCity(e.target.value)}
       />
 
-      <label>Days</label>
+      <label className="text-[var(--text-light)]">Days</label>
       <input
         type="number"
-        className="border p-2 w-full mb-4"
         min="1"
+        className="bg-[var(--dark-card)] text-[var(--text-light)] border border-[var(--dark-soft)]
+                   p-2 w-full mb-4 rounded focus:border-[var(--gold)] focus:outline-none"
         value={days}
         onChange={(e) => setDays(Number(e.target.value))}
       />
 
-      <label>Budget ($)</label>
+      <label className="text-[var(--text-light)]">Budget ($)</label>
       <input
         type="number"
-        className="border p-2 w-full mb-6"
         min="50"
+        className="bg-[var(--dark-card)] text-[var(--text-light)] border border-[var(--dark-soft)]
+                   p-2 w-full mb-6 rounded focus:border-[var(--gold)] focus:outline-none"
         value={budget}
         onChange={(e) => setBudget(Number(e.target.value))}
       />
 
       <button
         onClick={handleGenerate}
-        className="bg-blue-600 text-white p-2 w-full rounded"
         disabled={loading}
+        className="p-2 w-full rounded font-semibold 
+                   bg-[var(--gold)] text-black
+                   hover:bg-[var(--gold-soft)] transition"
       >
         {loading ? "Generating..." : "Generate Itinerary"}
       </button>

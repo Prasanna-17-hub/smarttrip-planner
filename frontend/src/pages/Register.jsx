@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { registerUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -15,46 +16,182 @@ function Register() {
     try {
       await registerUser(form);
       alert("Registration successful!");
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       alert("Error: " + error.response.data.message);
     }
   };
 
   return (
-    <div className="h-screen flex justify-center items-center bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow-md w-80"
-      >
-        <h2 className="text-xl font-bold mb-4">Register</h2>
+    <div className="relative h-screen flex justify-center items-center overflow-hidden bg-[var(--dark-bg)]">
 
-        <input
+      {/* 1️⃣ GOLD LIGHT RAYS */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle at 20% 20%, rgba(212,175,55,0.25), transparent 60%)",
+        }}
+        animate={{
+          rotate: [0, 25, 0],
+          scale: [1, 1.3, 1],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+      {/* 2️⃣ SWEEPING GOLD BEAMS */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(120deg, rgba(212,175,55,0.12), transparent)",
+        }}
+        animate={{
+          x: ["-30%", "30%", "-30%"],
+        }}
+        transition={{
+          duration: 14,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+      {/* 3️⃣ ANIMATED GOLD WIREFRAME GRID */}
+      <motion.div
+        className="absolute inset-0 opacity-20 pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--gold) 1px, transparent 1px), linear-gradient(90deg, var(--gold) 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
+        }}
+        animate={{
+          backgroundPosition: ["0px 0px", "80px 80px"],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      />
+
+      {/* 4️⃣ FLOATING PARALLAX GOLD DOTS */}
+      <motion.div className="absolute inset-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute bg-[var(--gold)] rounded-full blur-sm"
+            style={{
+              width: Math.random() * 8 + 4,
+              height: Math.random() * 8 + 4,
+              top: Math.random() * 100 + "%",
+              left: Math.random() * 100 + "%",
+              opacity: 0.3,
+            }}
+            animate={{
+              y: [-15, 15, -15],
+              x: [-10, 10, -10],
+            }}
+            transition={{
+              duration: Math.random() * 8 + 6,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </motion.div>
+
+      {/* 5️⃣ GOLD AURA GLOW */}
+      <motion.div
+        className="absolute w-96 h-96 rounded-full blur-3xl"
+        style={{
+          background: "radial-gradient(circle, rgba(212,175,55,0.2), transparent 70%)",
+        }}
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.4, 0.7, 0.4],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+      {/* 📝 Register Form */}
+      <motion.form
+        onSubmit={handleSubmit}
+        className="relative p-8 rounded-xl shadow-2xl w-80 
+                   bg-[var(--dark-card)] border border-[var(--dark-soft)]"
+        initial={{ opacity: 0, y: 50, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        {/* Logo (same animation as Login) */}
+        <motion.div
+          className="text-3xl font-extrabold text-[var(--gold)] mb-6 text-center"
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        >
+          ✨ LUX
+        </motion.div>
+
+        <h2 className="text-xl font-bold mb-4 text-[var(--gold)]">Register</h2>
+
+        <motion.input
           name="name"
           placeholder="Name"
-          className="border p-2 mb-3 w-full"
+          whileFocus={{ scale: 1.03 }}
+          className="p-2 mb-3 w-full rounded 
+                     bg-[var(--dark-soft)] 
+                     text-[var(--text-light)]
+                     border border-[var(--dark-soft)]
+                     focus:border-[var(--gold)]
+                     focus:outline-none"
           onChange={handleChange}
         />
 
-        <input
+        <motion.input
           name="email"
           placeholder="Email"
-          className="border p-2 mb-3 w-full"
+          whileFocus={{ scale: 1.03 }}
+          className="p-2 mb-3 w-full rounded 
+                     bg-[var(--dark-soft)] 
+                     text-[var(--text-light)]
+                     border border-[var(--dark-soft)]
+                     focus:border-[var(--gold)]
+                     focus:outline-none"
           onChange={handleChange}
         />
 
-        <input
+        <motion.input
           name="password"
           type="password"
           placeholder="Password"
-          className="border p-2 mb-3 w-full"
+          whileFocus={{ scale: 1.03 }}
+          className="p-2 mb-3 w-full rounded 
+                     bg-[var(--dark-soft)] 
+                     text-[var(--text-light)]
+                     border border-[var(--dark-soft)]
+                     focus:border-[var(--gold)]
+                     focus:outline-none"
           onChange={handleChange}
         />
 
-        <button className="bg-blue-500 text-white p-2 w-full rounded">
+        <motion.button
+          className="p-2 w-full rounded font-semibold 
+                     bg-[var(--gold)] text-black 
+                     hover:bg-[var(--gold-soft)] transition"
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+        >
           Register
-        </button>
-      </form>
+        </motion.button>
+      </motion.form>
     </div>
   );
 }
